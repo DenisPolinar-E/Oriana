@@ -48,7 +48,7 @@ def load_data(folderpath):
 
         fullname = folderpath + f
         if os.path.isfile(fullname):
-            with open(fullname, 'rb') as csvfile:
+            with open(fullname, 'r', encoding='utf-8') as csvfile:
 
                 eventsreader = csv.reader(csvfile, delimiter=',', quotechar='"')
                 for line, row in enumerate(eventsreader):
@@ -93,7 +93,7 @@ def load_data(folderpath):
                             elif row[column] == "PrivilegeList":
                                 PRIVILEGE_IDX = column
 
-                    print "reading ",f," line:",line
+                    print("reading ",f," line:",line)
                     #4624 Authentication event
                     if row[ID_IDX] == "4624":
                         strtime = row[TIME_IDX]
@@ -118,7 +118,7 @@ def load_data(folderpath):
                             except:
                                 pass
                         if createdevent:
-                            print "new 4624 created for host "+hostname
+                            print("new 4624 created for host "+hostname)
 
                     # 4625 Authentication event
                     if row[ID_IDX] == "4625":
@@ -144,7 +144,7 @@ def load_data(folderpath):
                             event4625, createdevent = Event_4625.objects.get_or_create(time=time, host=host, user=user,logontype=logontype,processname=processname,sourcehost=sourcehost,status=status,substatus=substatus)
 
                         if createdevent:
-                            print "new 4625 created for host " + hostname
+                            print("new 4625 created for host " + hostname)
 
                     # 4776 Local Authentication Event
                     if row[ID_IDX] == "4776":
@@ -160,7 +160,7 @@ def load_data(folderpath):
 
                         event4776, createdevent = Event_4776.objects.get_or_create(time=time, host=host, user=user,status=status)
                         if createdevent:
-                            print "new 4776 created for host " + hostname
+                            print("new 4776 created for host " + hostname)
 
                     # 5140 File Share Event
                     if row[ID_IDX] == "5140":
@@ -176,7 +176,7 @@ def load_data(folderpath):
 
                         event5140, createdevent = Event_5140.objects.get_or_create(time=time, host=host, user=user,sharename=sharename)
                         if createdevent:
-                            print "new 5140 created for host " + hostname
+                            print("new 5140 created for host " + hostname)
 
 
                     # 4672 Privileged Auth
@@ -193,7 +193,7 @@ def load_data(folderpath):
 
                         event4672, createdevent = Event_4672.objects.get_or_create(time=time, host=host, user=user,privilegelist=privilegelist)
                         if createdevent:
-                            print "new 4672 created for host " + hostname
+                            print("new 4672 created for host " + hostname)
 
                     # 7045 New Service created event
                     elif row[ID_IDX] == "7045":
@@ -209,7 +209,7 @@ def load_data(folderpath):
                         host, created_host = Host.objects.get_or_create(hostname=hostname)
                         event7045,createdevent=Event_7045.objects.get_or_create(time=time, host=host, service=service)
                         if createdevent:
-                            print "new 7045 created for "+hostname
+                            print("new 7045 created for "+hostname)
 
                     # 4698 New Scheduled Task event
                     elif row[ID_IDX] == "4698":
@@ -234,7 +234,7 @@ def load_data(folderpath):
                         task,taskcreated = Task.objects.get_or_create(taskname=taskname,imagepath=cmdline,arguments=arguments)
                         event4698,createdevent=Event_4698.objects.get_or_create(time=time, host=host, task=task)
                         if createdevent:
-                            print "new 4698 created for " + hostname
+                            print("new 4698 created for " + hostname)
 
                     # WMI event
                     elif row[ID_IDX] == "2":
@@ -248,4 +248,4 @@ def load_data(folderpath):
                         operation = re.findall('Operation = (.*?);', wmidetails, re.DOTALL)[0]
                         host, created_host = Host.objects.get_or_create(hostname=hostname)
                         WmiEvent_2.objects.create(time=time, host=host, operationid=operationid,operation=operation)
-                        print "new Wmi Event 2 created for " + hostname
+                        print("new Wmi Event 2 created for " + hostname)

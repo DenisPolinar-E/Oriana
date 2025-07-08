@@ -96,7 +96,7 @@ class Event_4624(models.Model):
     status = models.CharField(max_length=200)
 
     #sourceip = models.CharField(max_length=200)
-    sourceip = models.ForeignKey(SourceIp,null=True)
+    sourceip = models.ForeignKey(SourceIp, null=True, on_delete=models.CASCADE)
 
 class Event_4625(models.Model):
 
@@ -112,7 +112,7 @@ class Event_4625(models.Model):
     substatus = models.CharField(max_length=200)
 
     #sourceip = models.CharField(max_length=200)
-    sourceip = models.ForeignKey(SourceIp, null=True)
+    sourceip = models.ForeignKey(SourceIp, null=True, on_delete=models.CASCADE)
 
 class Event_4776(models.Model):
 
@@ -151,7 +151,7 @@ class Event_5140(models.Model):
     time = models.DateTimeField()
     host = models.ForeignKey(Host, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    sourceip = models.ForeignKey(SourceIp, null=True)
+    sourceip = models.ForeignKey(SourceIp, null=True, on_delete=models.CASCADE)
     sharename = models.CharField(max_length=100)
 
     def __str__(self):

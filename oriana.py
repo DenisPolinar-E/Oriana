@@ -12,17 +12,17 @@ from django.core.wsgi import get_wsgi_application
 
 banner="""
 ________        .__                      
-\_____  \_______|__|____    ____ _____   
- /   |   \_  __ \  \__  \  /    \\__  \  
-/    |    \  | \/  |/ __ \|   |  \/ __ \_
-\_______  /__|  |__(____  /___|  (____  /
-        \/              \/     \/     \/ 
+\\_____  \\_______|__|____    ____ _____   
+ /   |   \\_  __ \\  \\__  \\  /    \\\\__  \\  
+/    |    \\  | \\/  |/ __ \\|   |  \\/ __ \\_
+\\_______  /__|  |__(____  /___|  (____  /
+        \\/              \\/     \\/     \\/ 
 """
-banner+="\t\t by Mauricio Velazco (@mvelazco)\n"
+banner+="\t\t by Denis Polinar (@dpolinar)\n"
 
 if __name__ == '__main__':
 
-    print banner
+    print(banner)
 
     parser = argparse.ArgumentParser(usage='oriana.py -A [action] OPTIONS')
     parser.add_argument("-A", "--action", dest="action", nargs='+', default=False, type=str,help="specify the action name: createdb, startdb, load, analytics, runserver")
@@ -30,14 +30,14 @@ if __name__ == '__main__':
 
     if len(sys.argv)==1:
         parser.print_help()
-        print '\n'
-        print 'Guide:'
-        print 'oriana.py -A createdb              - Create the oriana database and update the django configuration file'
-        print 'oriana.py -A startdb               - Create the database schema'
-        print 'oriana.py -A load -d [folder path] - Read and index the CSV files found on folder_path'
-        print 'oriana.py -A analytics             - Run Orianas analytics'
-        print 'oriana.py -A runserver             - Run the web server'
-        print 'Hunt !'
+        print('\n')
+        print('Guide:')
+        print('oriana.py -A createdb              - Create the oriana database and update the django configuration file')
+        print('oriana.py -A startdb               - Create the database schema')
+        print('oriana.py -A load -d [folder path] - Read and index the CSV files found on folder_path')
+        print('oriana.py -A analytics             - Run Orianas analytics')
+        print('oriana.py -A runserver             - Run the web server')
+        print('Hunt !')
         sys.exit(1)
 
     args = parser.parse_args()
@@ -47,19 +47,19 @@ if __name__ == '__main__':
         if args.path:
             load_data(args.path[0])
         else:
-            print "\t[!] The path argument is missing"
+            print("\t[!] The path argument is missing")
 
 
     elif args.action[0] == "runserver":
 
         os.environ.setdefault("DJANGO_SETTINGS_MODULE", "LM_Hunting.settings")
         #application = get_wsgi_application()
-        call_command('runserver', interactive=False)
+        call_command('runserver')
 
     elif args.action[0] == "createdb":
 
-        print '\n'
-        user = raw_input("Postgres Username:")
+        print('\n')
+        user = input("Postgres Username:")
         passwd = getpass.getpass("Postgres Password:")
 
         try:
@@ -68,8 +68,8 @@ if __name__ == '__main__':
             cur = con.cursor()
             #cur.execute("DROP DATABASE oriana;")
             cur.execute("CREATE DATABASE oriana;")
-            print '\n'
-            print "\t[+] Database 'oriana' created"
+            print('\n')
+            print("\t[+] Database 'oriana' created")
 
             try:
                 proj_path = os.path.dirname(os.getcwd())
@@ -81,25 +81,25 @@ if __name__ == '__main__':
                 out = open('settings.py', 'w')
                 out.writelines(lines)
                 out.close()
-                print ""
-                print "\t[+] Warning: The file",os.path.join(os.getcwd(), 'LM_Hunting','settings.py')+ " has been updated with the cleartext password. "
+                print("")
+                print("\t[+] Warning: The file",os.path.join(os.getcwd(), 'LM_Hunting','settings.py')+ " has been updated with the cleartext password. ")
 
-            except Exception,e:
-                print '\n'
-                print "File Error: Cannot write to settings.py"
-                print e
+            except Exception as e:
+                print('\n')
+                print("File Error: Cannot write to settings.py")
+                print(e)
 
-        except Exception,e:
-            print '\n'
-            print "Database Error: Check that postgres is running && credentials are valid && permissions are correct."
-            print e
+        except Exception as e:
+            print('\n')
+            print("Database Error: Check that postgres is running && credentials are valid && permissions are correct.")
+            print(e)
 
     elif args.action[0] == "startdb":
 
         os.environ.setdefault("DJANGO_SETTINGS_MODULE", "LM_Hunting.settings")
         django.setup()
         from django.core.management import call_command
-        call_command("migrate", interactive=False)
+        call_command("migrate")
 
     elif args.action[0] == "analytics":
         runall()
